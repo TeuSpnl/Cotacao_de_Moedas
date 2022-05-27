@@ -1,5 +1,5 @@
 import tkinter as tk
-from turtle import width
+from tkinter import ttk
 
 janela = tk.Tk()
 janela.title("Cylinder")
@@ -20,12 +20,15 @@ password = tk.Entry()
 password.grid()
 
 def entrar():
+    msg_log = tk.Label(text= "", width= 35, height= 3)
+    msg_log.grid(sticky="EW", column= 0, row= 5)
+    
     if (login.get() == "admin" and password.get() == "admin"):
-        print("Você está logado!")
+        msg_log["text"] = "Usuário logado!"
     else:
-        print("Usuário ou senha incorretos.")
+        msg_log["text"] = "Usuário ou senha incorretos."
 
 botaoLogin = tk.Button(text = "Entrar", command = entrar)
-botaoLogin.grid(row = 5)
+botaoLogin.grid(row = 6)
 
 janela.mainloop()
