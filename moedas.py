@@ -1,8 +1,8 @@
-from os import link
 import tkinter as tk
 from tkinter import ttk
-from pyparsing import anyOpenTag
+from tkinter.filedialog import askopenfilename
 from tkcalendar import DateEntry
+import pandas as pd
 import requests
 
 req = requests.get('https://economia.awesomeapi.com.br/json/all')
@@ -12,6 +12,8 @@ lista = list(dicio.keys())
 
 def pegar_cotacao():
     moeda = selcMoeda1.get()
+    
+    print(moeda)
     
     data = selcData1.get()
     ano = data[-4:]
@@ -27,11 +29,34 @@ def pegar_cotacao():
     result1["text"] = f"Na data {data}, a moeda {moeda} custava R${valor}"
 
 def selecionar():
-    pass
+    caminhoGot = askopenfilename(title= "Selecione o arquivo xls")
+    caminho.set(caminhoGot)
+    if (caminhoGot):
+        msgSelcErr["text"] = f"{caminhoGot}"
 
 
 def atualizar_arq():
-    pass
+    dataFrame = pd.read_excel(caminho.get())
+    moedas =  dataFrame.iloc[:, 0]
+    
+    dataInicial = selcDataInicial.get()
+    anoInicial = dataInicial[-4:]
+    mesInicial = dataInicial[3:5]
+    diaInicial = dataInicial[:2]
+    
+    dataFinal = selcDataFinal.get()
+    anoFinal = dataFinal[-4:]
+    mesFinal = dataFinal[3:5]
+    diaFinal = dataFinal[:2]
+    
+    for moeda in moedas:
+        link = f'https://economia.awesomeapi.com.br/json/daily/{moeda}-BRL?start_date={anoInicial}{mesInicial}{diaInicial}&end_date={anoFinal}{mesFinal}{diaFinal}'
+
+    
+    
+    reqCota = requests.get(link)
+    cotacao = reqCota.json()
+    valor = cotacao[0]['bid']
 
 
 janela = tk.Tk()
@@ -75,8 +100,10 @@ subTitle2 = tk.Label(text="Cotação de moedas + data", anchor="w", padx=15,
 selcArq = tk.Button(text="Selecione o arquivo", font="Roboto, 11",
                     command=selecionar).grid(row=7, column=0, pady=10, padx=(5, 0), sticky="NS")
 
-msgSelcErr = tk.Label(text="Nenhum arquivo selecionado.", font="Roboto, 12",
-                      anchor="e", justify="left").grid(row=7, column=2, columnspan=3, sticky="NSEW")
+caminho = tk.StringVar()
+    
+msgSelcErr = tk.Label(text="Nenhum arquivo selecionado.", font="Roboto, 12", anchor="w", justify="left")
+msgSelcErr.grid(row=7, column=1, columnspan= 5, sticky="NSEW")
 
 moeda2 = tk.Label(text="Escolha a moeda: ", font=("Roboto, 11")).grid(
     row=8, column=0, sticky="NSEW", pady=10)
@@ -86,9 +113,11 @@ selcMoeda2.grid(row=8, column=1, pady=10, sticky="NSEW")
 botaoSalvar = tk.Button(text="Salvar", font="Roboto, 13", width=15, height=2, command=atualizar_arq).grid(
     row=7, column=2, rowspan=3, padx=(50, 0), pady=(5, 0))
 
-data2 = tk.Label(text="Escolha a data: ", font=("Roboto, 11")).grid(
-    row=9, column=0, sticky="NSEW", pady=(0, 50))
-selcData2 = DateEntry(year=2022, locale='pt_br', width=15)
-selcData2.grid(row=9, column=1, pady=(0, 50), sticky="NSEW")
+dataInicial = tk.Label(text="Escolha a data: ", font=("Roboto, 11")).grid(
+    row=9, column=0, sticky="NSEW", pady=(0, 5))
+selcDataInicial = DateEntry(year=2022, locale='pt_br', width=15)
+selcDataInicial.grid(row=9, column=1, sticky="EW")
+selcDataFinal = DateEntry(year=2022, locale='pt_br', width=15)
+selcDataFinal.grid(row=10, column=1, pady=(0, 50), sticky="NSEW")
 
 janela.mainloop()
