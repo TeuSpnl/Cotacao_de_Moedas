@@ -108,3 +108,7 @@ msgSelcErr = tk.Label(text="",
 msgSelcErr.grid(row=11, column=2, sticky="NSEW", pady=(10, 40))
 
 janela.mainloop()
+
+
+# Fazer com que o sistema crie um arquivo novo com os dados
+# Fazer com que o usuário possa escolher se quer todas as moedas ou só algumas
