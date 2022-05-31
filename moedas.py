@@ -39,13 +39,16 @@ def atualizar_arq():
     mesFinal = dataFinal[3:5]
     diaFinal = dataFinal[:2]
 
-    link = f'https://economia.awesomeapi.com.br/json/daily/{moeda}-BRL?start_date={anoInicial}{mesInicial}{diaInicial}&end_date={anoFinal}{mesFinal}{diaFinal}'
+    # link = f'https://economia.awesomeapi.com.br/json/daily/USD-BRL?start_date={anoInicial}{mesInicial}{diaInicial}&end_date={anoFinal}{mesFinal}{diaFinal}'
+    
+    link = f"https://economia.awesomeapi.com.br/USD-BRL/10?start_date={anoInicial}{mesInicial}{diaInicial}&end_date={anoFinal}{mesFinal}{diaFinal}"
 
     reqCota = requests.get(link)
     cotacao = reqCota.json()
-    valor = cotacao[0]['code']
+    # moeda = cotacao[0]['code']
+    # valor = cotacao[0]['bid']
 
-    print(valor)
+    print(cotacao, "\n\n", reqCota, "\n\n", link)
 
 
 janela = tk.Tk()
