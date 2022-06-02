@@ -40,7 +40,7 @@ def atualizar_arq():
     diaFinal = dataFinal[:2]
 
     # link = f'https://economia.awesomeapi.com.br/json/daily/USD-BRL?start_date={anoInicial}{mesInicial}{diaInicial}&end_date={anoFinal}{mesFinal}{diaFinal}'
-    
+
     link = f"https://economia.awesomeapi.com.br/USD-BRL/10?start_date={anoInicial}{mesInicial}{diaInicial}&end_date={anoFinal}{mesFinal}{diaFinal}"
 
     reqCota = requests.get(link)
@@ -49,6 +49,15 @@ def atualizar_arq():
     # valor = cotacao[0]['bid']
 
     print(cotacao, "\n\n", reqCota, "\n\n", link)
+
+
+def create_moeda():
+    if (respcheck.get() == 0):
+        moeda2['state'] = 'normal'
+        selcMoeda2['state'] = 'normal'
+    else:
+        moeda2['state'] = 'disabled'
+        selcMoeda2['state'] = 'disabled'
 
 
 janela = tk.Tk()
@@ -89,9 +98,12 @@ result1.grid(row=5, pady=(10, 20), column=0, columnspan=6, sticky="NSEW")
 subTitle2 = tk.Label(text="Cotação de moedas + data", anchor="w", padx=15,
                      font=("Roboto, 14")).grid(row=6, column=0, sticky="NSEW")
 
+respcheck = tk.IntVar()
+todasounnao = tk.Checkbutton(text="Quero salvar os dados de todas as moedas.", variable=respcheck, command= create_moeda).grid(
+    row=7, column=0, columnspan=7)
 
-moeda2 = tk.Label(text="Escolha a moeda: ", font=("Roboto, 11")).grid(
-    row=8, column=0, sticky="NSEW", pady=10)
+moeda2 = tk.Label(text="Escolha a moeda: ", font=("Roboto, 11"))
+moeda2.grid(row=8, column=0, sticky="NSEW", pady=10)
 selcMoeda2 = ttk.Combobox(values=lista, width=15)
 selcMoeda2.grid(row=8, column=1, pady=10, sticky="NSEW")
 
