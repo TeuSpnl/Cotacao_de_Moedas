@@ -46,7 +46,14 @@ def all_or_not():
         selcMoeda2['state'] = 'disabled'
 
 def adicionar_moeda():
-    pass
+    entry = selcMoeda2.get()
+    soma = 0
+    for char in entry:
+        soma += ord(char)
+        
+    moedas = [""]
+    moedas[soma] = [entry]
+    print(moedas[soma], moedas)
 
 # Atualizar/Criar arquivo para guardar as informações
 def atualizar_arq():
@@ -147,7 +154,7 @@ opcional = tk.Label(text= "*Opcional").grid(row=7, column=0, padx= (230, 0), pad
 
 respcheck = tk.IntVar()
 todasounnao = tk.Checkbutton(text="Quero salvar os dados de todas as moedas.", variable=respcheck, command= all_or_not).grid(
-    row=9, column=1, columnspan=7)
+    row=9, column=1, columnspan=7, padx= (50,0))
 
 
 moeda2 = tk.Label(text="Escolha a moeda: ", font=("Roboto, 11"))
