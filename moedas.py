@@ -48,11 +48,13 @@ def all_or_not():
 def adicionar_moeda():
     entry = selcMoeda2.get()
     soma = 0
+    
     for char in entry:
         soma += ord(char)
+        print(entry)
         
-    moedas = [""]
-    moedas[soma] = [entry]
+    moedas = np.array([])
+    moedas[soma] = entry
     print(moedas[soma], moedas)
 
 # Atualizar/Criar arquivo para guardar as informações
@@ -72,18 +74,14 @@ def atualizar_arq():
     if (todas == 1):
         link = f"https://economia.awesomeapi.com.br/json/daily/all?start_date={anoInicial}{mesInicial}{diaInicial}&end_date={anoFinal}{mesFinal}{diaFinal}"
     else:
-        link = f""    
+        link = f""
 
-    if(caminho != "" and todas == 1):
+    try:
+        # Editar o arquivo que já existe
+        
         pass
-    
-    elif(caminho != "" and todas == 0):
-        pass
-    
-    elif(caminho == "" and todas == 1):
-        link = f"https://economia.awesomeapi.com.br/json/daily/all/?start_date={anoInicial}{mesInicial}{diaInicial}&end_date={anoFinal}{mesFinal}{diaFinal}"
-    
-    else:
+    except:
+        # Cria um novo arquivo
         pass
 
     # link = f'https://economia.awesomeapi.com.br/json/daily/USD-BRL?start_date={anoInicial}{mesInicial}{diaInicial}&end_date={anoFinal}{mesFinal}{diaFinal}'
@@ -147,7 +145,6 @@ selcArq = tk.Button(text="Selecione o arquivo", font="Roboto, 11", command=selec
 selcArq.grid(row=7, column=0, pady=10, padx=(5, 0), sticky="NS")
 
 caminho = tk.StringVar()
-caminho = ""
 
 opcional = tk.Label(text= "*Opcional").grid(row=7, column=0, padx= (230, 0), pady= (0, 10))
 
@@ -187,6 +184,6 @@ msgSelcErr.grid(row=12, column=0, sticky="NSEW", columnspan= 5, pady=(25, 40))
 janela.mainloop()
 
 
-# Pegar selec arquiv (colocar nome de atualizar arquivo) no github
 # Fazer com que o sistema crie um arquivo novo com os dados ou atualize um arquivo
 # Salvar os nomes das moedas no array. pos = soma dos valores ASCII do nome da moeda
+# Aprender a criar um array
