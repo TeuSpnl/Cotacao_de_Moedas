@@ -51,10 +51,16 @@ def adicionar_moeda():
     
     for char in entry:
         soma += ord(char)
-        print(entry)
-        
-    moedas = np.array([])
-    moedas[soma] = entry
+    
+    moedas = np.array
+    print(moedas)
+    moedas[0] = "Moeda"
+    print(moedas)
+    
+    if (moedas[soma] != []):
+        moedas.insert(soma, entry)
+    else:
+        msgSelcErr["text"] = f"A moeda {entry} já foi selecionada"
     print(moedas[soma], moedas)
 
 # Atualizar/Criar arquivo para guardar as informações
