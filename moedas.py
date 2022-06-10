@@ -47,21 +47,12 @@ def all_or_not():
 
 def adicionar_moeda():
     entry = selcMoeda2.get()
-    soma = 0
     
-    for char in entry:
-        soma += ord(char)
-    
-    moedas = np.array
-    print(moedas)
-    moedas[0] = "Moeda"
-    print(moedas)
-    
-    if (moedas[soma] != []):
-        moedas.insert(soma, entry)
+    if entry in moedas:
+        msgSelcErr["text"] = f"A moeda {entry} já foi inserida na lista."
     else:
-        msgSelcErr["text"] = f"A moeda {entry} já foi selecionada"
-    print(moedas[soma], moedas)
+        moedas.append(entry)
+        msgSelcErr["text"] = f"Moeda {entry} inserida na lista."
 
 # Atualizar/Criar arquivo para guardar as informações
 def atualizar_arq():
@@ -77,10 +68,19 @@ def atualizar_arq():
     mesFinal = dataFinal[3:5]
     diaFinal = dataFinal[:2]
     
+    reqs = []
+    
     if (todas == 1):
         link = f"https://economia.awesomeapi.com.br/json/daily/all?start_date={anoInicial}{mesInicial}{diaInicial}&end_date={anoFinal}{mesFinal}{diaFinal}"
     else:
-        link = f""
+        for moeda in moedas:
+            link = f"https://economia.awesomeapi.com.br/json/daily/{moeda}-BRL?start_date={anoInicial}{mesInicial}{diaInicial}&end_date={anoFinal}{mesFinal}{diaFinal}"
+            
+            reqCota = requests.get(link)
+            cotacao = reqCota.json()
+            reqs.append([cotacao[0]['code'], cotacao[0]['bid']])
+            
+    print(reqs)
 
     try:
         # Editar o arquivo que já existe
@@ -90,17 +90,12 @@ def atualizar_arq():
         # Cria um novo arquivo
         pass
 
-    # link = f'https://economia.awesomeapi.com.br/json/daily/USD-BRL?start_date={anoInicial}{mesInicial}{diaInicial}&end_date={anoFinal}{mesFinal}{diaFinal}'
-
-    link = f"https://economia.awesomeapi.com.br/USD-BRL/10?start_date={anoInicial}{mesInicial}{diaInicial}&end_date={anoFinal}{mesFinal}{diaFinal}"
-
-    print(link)
     reqCota = requests.get(link)
     cotacao = reqCota.json()
     # moeda = cotacao[0]['code']
     # valor = cotacao[0]['bid']
 
-    print(cotacao, "\n\n", reqCota, "\n\n", link)
+    print("\n\n", cotacao, "\n\n", reqCota, "\n\n", link)
 
 
 janela = tk.Tk()
@@ -168,6 +163,8 @@ selcMoeda2.grid(row=9, column=0, pady=10, columnspan= 3)
 
 addMoeda = tk.Button(text= "+", font="Roboto, 9", command= adicionar_moeda)
 addMoeda.grid(row= 9, column= 1, padx= (40, 0))
+
+moedas = []
 
 dataInicial = tk.Label(text="Escolha a data: ", font=("Roboto, 11")).grid(
     row=10, column=0, sticky="NSEW", pady=(0, 5))
