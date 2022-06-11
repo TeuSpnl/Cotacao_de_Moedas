@@ -52,7 +52,7 @@ def adicionar_moeda():
         msgSelcErr["text"] = f"A moeda {entry} já foi inserida na lista."
     else:
         moedas.append(entry)
-        msgSelcErr["text"] = f"Moeda {entry} inserida na lista."
+        msgSelcErr["text"] = f"Moeda {entry} foi inserida na lista."
 
 # Atualizar/Criar arquivo para guardar as informações
 def atualizar_arq():
@@ -71,17 +71,23 @@ def atualizar_arq():
     reqs = []
     
     if (todas == 1):
-        link = f"https://economia.awesomeapi.com.br/json/daily/all?start_date={anoInicial}{mesInicial}{diaInicial}&end_date={anoFinal}{mesFinal}{diaFinal}"
+        link = f"https://economia.awesomeapi.com.br/json/all?start_date={anoInicial}{mesInicial}{diaInicial}&end_date={anoFinal}{mesFinal}{diaFinal}"
+        reqCota = requests.get(link)
+        cotacoes = reqCota.json()
+        print(cotacoes)
+        reqs.append([cotacoes[0]['code'], cotacoes[0]['bid']])
+        
     else:
         for moeda in moedas:
             link = f"https://economia.awesomeapi.com.br/json/daily/{moeda}-BRL?start_date={anoInicial}{mesInicial}{diaInicial}&end_date={anoFinal}{mesFinal}{diaFinal}"
             
             reqCota = requests.get(link)
-            cotacao = reqCota.json()
-            reqs.append([cotacao[0]['code'], cotacao[0]['bid']])
+            cotacoes = reqCota.json()
+            print("\n", cotacoes)
+            reqs.append([cotacoes[0]['code'], cotacoes[0]['bid']])
             
     print(reqs)
-
+            
     try:
         # Editar o arquivo que já existe
         
@@ -94,8 +100,6 @@ def atualizar_arq():
     cotacao = reqCota.json()
     # moeda = cotacao[0]['code']
     # valor = cotacao[0]['bid']
-
-    print("\n\n", cotacao, "\n\n", reqCota, "\n\n", link)
 
 
 janela = tk.Tk()
@@ -188,5 +192,3 @@ janela.mainloop()
 
 
 # Fazer com que o sistema crie um arquivo novo com os dados ou atualize um arquivo
-# Salvar os nomes das moedas no array. pos = soma dos valores ASCII do nome da moeda
-# Aprender a criar um array
