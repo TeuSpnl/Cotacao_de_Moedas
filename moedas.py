@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ANCHOR, ttk
 from tkinter.filedialog import askopenfilename
 from tkcalendar import DateEntry
+from datetime import date, datetime
 import pandas as pd
 import requests
 import numpy as np
@@ -19,7 +20,9 @@ def pegar_cotacao():
     mes = data[3:5]
     dia = data[:2]
 
-    link = f'https://economia.awesomeapi.com.br/json/daily/{moeda}-BRL?start_date={ano}{mes}{dia}&end_date={ano}{mes}{dia}'
+    link = f'https://economia.awesomeapi.com.br/json/daily/{moeda}-BRL? \
+                start_date={ano}{mes}{dia}& \
+                end_date={ano}{mes}{dia}'
 
     reqCota = requests.get(link)
     cotacao = reqCota.json()
@@ -70,23 +73,42 @@ def atualizar_arq():
     
     reqs = []
     
+    final = date(int(anoFinal), int(mesFinal), int(diaFinal))
+    inicial = date(int(anoInicial), int(mesInicial), int(diaInicial))
+    dias = abs(final - inicial).days
+    
     if (todas == 1):
-        link = f"https://economia.awesomeapi.com.br/json/all?start_date={anoInicial}{mesInicial}{diaInicial}&end_date={anoFinal}{mesFinal}{diaFinal}"
-        reqCota = requests.get(link)
-        cotacoes = reqCota.json()
-        print(cotacoes)
-        reqs.append([cotacoes[0]['code'], cotacoes[0]['bid']])
-        
-    else:
-        for moeda in moedas:
-            link = f"https://economia.awesomeapi.com.br/json/daily/{moeda}-BRL?start_date={anoInicial}{mesInicial}{diaInicial}&end_date={anoFinal}{mesFinal}{diaFinal}"
+        for moeda in lista:
+            link = f"https://economia.awesomeapi.com.br/json/daily/{moeda}-BRL/{dias}?" \
+                        f"start_date={anoInicial}{mesInicial}{diaInicial}&" \
+                        f"end_date={anoFinal}{mesFinal}{diaFinal}"
             
             reqCota = requests.get(link)
             cotacoes = reqCota.json()
             print("\n", cotacoes)
             reqs.append([cotacoes[0]['code'], cotacoes[0]['bid']])
             
-    print(reqs)
+            print(link)
+        
+    else:
+        for moeda in moedas:
+            link = f"https://economia.awesomeapi.com.br/json/daily/{moeda}-BRL/{dias}?" \
+                        f"start_date={anoInicial}{mesInicial}{diaInicial}&" \
+                        f"end_date={anoFinal}{mesFinal}{diaFinal}"
+            
+            reqCota = requests.get(link)
+            cotacoes = reqCota.json()
+            print("\n", cotacoes)
+            
+            for cotacao in cotacoes:
+                timestamp = int(cotacao['timestamp'])
+                bid = float(cotacao['bid'])
+                data = datetime.timestamp(timestamp)
+                data = datetime.strftime('%d/%n/%Y')
+            
+            print(link)
+            
+    print("\n", reqs)
             
     try:
         # Editar o arquivo que já existe
@@ -95,11 +117,6 @@ def atualizar_arq():
     except:
         # Cria um novo arquivo
         pass
-
-    reqCota = requests.get(link)
-    cotacao = reqCota.json()
-    # moeda = cotacao[0]['code']
-    # valor = cotacao[0]['bid']
 
 
 janela = tk.Tk()
