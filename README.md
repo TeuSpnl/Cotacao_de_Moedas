@@ -1,3 +1,5 @@
-# CylinderDesk
+# Cotação de moedas
 
-The creation progress of the Cylinder app for desktop will be uploaded here.
+## Um app que pega a cotação em real de uma ou mais moedas, por um período de dias determinado pelo usuário e pode salvar em um arquivo.
+
+#### Adapatado do programa em tkinter criado no Python Impressionador
