@@ -20,9 +20,7 @@ def pegar_cotacao():
     mes = data[3:5]
     dia = data[:2]
 
-    link = f'https://economia.awesomeapi.com.br/json/daily/{moeda}-BRL? \
-                start_date={ano}{mes}{dia}& \
-                end_date={ano}{mes}{dia}'
+    link = f'https://economia.awesomeapi.com.br/json/daily/{moeda}-BRL?start_date={ano}{mes}{dia}&end_date={ano}{mes}{dia}'
 
     reqCota = requests.get(link)
     cotacao = reqCota.json()
@@ -85,7 +83,6 @@ def atualizar_arq():
             
             reqCota = requests.get(link)
             cotacoes = reqCota.json()
-            print("\n", cotacoes)
             reqs.append([cotacoes[0]['code'], cotacoes[0]['bid']])
             
             print(link)
@@ -98,13 +95,12 @@ def atualizar_arq():
             
             reqCota = requests.get(link)
             cotacoes = reqCota.json()
-            print("\n", cotacoes)
             
-            for cotacao in cotacoes:
-                timestamp = int(cotacao['timestamp'])
-                bid = float(cotacao['bid'])
-                data = datetime.timestamp(timestamp)
-                data = datetime.strftime('%d/%n/%Y')
+            # for cotacao in cotacoes:
+            #     timestamp = int(cotacao['timestamp'])
+            #     bid = float(cotacao['bid'])
+            #     dataSt = datetime.timestamp(timestamp)
+            #     dataSt = datetime.strftime('%d/%n/%Y')
             
             print(link)
             
@@ -112,11 +108,21 @@ def atualizar_arq():
             
     try:
         # Editar o arquivo que já existe
+        df = pd.read_excel(caminho.get())
+        print(df)
         
-        pass
+        coluna1 = df.iloc[:,6]
+    
+    # Linha
+    # Linha, coluna
+    # A partir da linha : até linha
+    # Na linha, : até coluna
+    # A partir da linha : ,na coluna
+    
+        print(coluna1)
     except:
         # Cria um novo arquivo
-        pass
+        print("passou")
 
 
 janela = tk.Tk()
